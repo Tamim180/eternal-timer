@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.eternaltimer.EternalTimer</id>
+  <name>Eternal Timer</name>
+  <summary>Timers and stopwatches that survive shutdowns and power cuts</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>
+      Run any number of timers and stopwatches at once. Every item stores an absolute
+      timestamp instead of a live countdown, so reopening the app after a reboot or a
+      power cut shows exactly the right remaining or elapsed time. Nothing is lost.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Animated liquid progress rings, a typed/scrolled HH:MM:SS picker and several color themes</li>
+      <li>Finish alarm sound and tray notifications</li>
+      <li>Per-timer history: every pause, and every gap caused by a power cut, shutdown or closed app</li>
+      <li>Optional end-to-end encrypted sync with the Android companion app, so a phone keeps counting and ringing even when the PC loses power</li>
+    </ul>
+    <p>
+      Sync is opt-in and uses a third-party relay (ntfy). The relay only sees encrypted
+      data; see the project documentation for the limits of the free public relay.
+    </p>
+  </description>
+  <launchable type="desktop-id">com.eternaltimer.EternalTimer.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="3.0.0" date="2026-10-25">
+      <description><p>Phone sync and Android app, liquid-ring redesign with themes, finish sound, per-timer history with power-cut detection.</p></description>
+    </release>
+    <release version="2.0.0" date="2026-10-22">
+      <description><p>Polished Qt redesign with animated circular progress rings and glass-panel styling.</p></description>
+    </release>
+  </releases>
+</component>

@@ -1,0 +1,11 @@
+Eternal Timer keeps any number of timers and stopwatches running, and never loses them: every timer is stored as absolute timestamps, so after a reboot it shows exactly the right time.
+
+• Exact alarms that ring even if the app is closed or the phone is in Doze, with a full-screen dismiss screen, your choice of alarm sound, and an in-app Stop button
+• A live notification for every timer with a countdown and a Pause/Resume button
+• Scroll-wheel time picker, quick presets, stopwatches, per-timer history (every pause and when it happened)
+• Liquid progress rings, four color themes, and a calm mode with less animation
+• No ads, no tracking, no accounts, no third-party libraries
+
+Optional sync with the Eternal Timer desktop app (Linux): a copy of your timers lives on the phone, so when your PC loses power the phone keeps counting and rings on its own. Sync is off until you pair a device, end-to-end encrypted (AES-256-GCM), and uses a public ntfy relay by default (you can point it at your own). The relay only ever sees encrypted data, but it is a free third-party service with rate limits and no guarantees; timers and alarms keep working without it.
+
+Open source (MIT).

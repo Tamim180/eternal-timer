@@ -1,0 +1,32 @@
+__pycache__/
+*.pyc
+.venv/
+
+# flatpak
+build-dir/
+.flatpak-builder/
+flatpak/pyside6-sources.json
+*.flatpak
+
+# android / gradle
+.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+captures/
+*.apk
+*.aab
+
+# signing keys: NEVER commit these
+android/keystore.properties
+*.jks
+*.keystore
+
+# editors / OS
+.idea/
+.vscode/
+.DS_Store
+.kotlin/
+.kotlin/

@@ -1,0 +1,213 @@
+#!/usr/bin/env python3
+"""
+etimer - Eternal Timer CLI (multi-timer & multi-stopwatch)
+
+Usage:
+  etimer add timer 25m [label...]      Start a new countdown
+  etimer add stopwatch [label...]      Start a new stopwatch
+  etimer list                          List all active/paused items
+  etimer pause <id|label>
+  etimer resume <id|label>
+  etimer restart <id|label>            Timer only: reset to full duration
+  etimer remove <id|label>
+  etimer history <id|label>            Show pauses, offline gaps (power cut / app
+                                        closed) and finish time for one item
+  etimer sound [on|off|test]           Finish sound: toggle or play it once
+  etimer sound style alarm|chime       Loud alarm beeps (default) or soft chime
+  etimer sound file <path>|default     Use your own sound file (or the built-in chime)
+  etimer sync                          Sync status
+  etimer sync setup [server-url]       Create a pairing code for your other device
+  etimer sync join <CODE> [server-url] Pair with a code made on the other device
+  etimer sync now                      Pull + push right now (also runs in `check`)
+  etimer sync off                      Stop syncing (timers stay)
+  etimer check                         Silent: notify any newly-finished timers
+                                        (used by autostart / systemd timer)
+  etimer watch                         Live-updating multi-item view (Ctrl+C to exit)
+"""
+
+import sys
+import time
+
+import eternal_timer_core as core
+
+
+def resolve(state, ref):
+    item = core.find(state, ref) or core.find_by_prefix(state, ref)
+    if not item:
+        print(f"No item matches '{ref}'.")
+        sys.exit(1)
+    return item
+
+
+def main():
+    args = sys.argv[1:]
+    if not args:
+        print(__doc__)
+        return
+
+    cmd = args[0]
+    state = core.load_state()
+
+    if cmd == "add":
+        if len(args) < 2 or args[1] not in ("timer", "stopwatch"):
+            print("Usage: etimer add timer <duration> [label...]  |  etimer add stopwatch [label...]")
+            return
+        kind = args[1]
+        if kind == "timer":
+            if len(args) < 3:
+                print("Usage: etimer add timer <duration> [label...]")
+                return
+            try:
+                seconds = core.parse_duration(args[2])
+            except ValueError as e:
+                print(e)
+                return
+            label = " ".join(args[3:])
+            item = core.add_timer(state, seconds, label)
+        else:
+            label = " ".join(args[2:])
+            item = core.add_stopwatch(state, label)
+        print(core.summary_line(item))
+
+    elif cmd == "list":
+        state = core.check_and_notify(state)
+        if not state["items"]:
+            print("Nothing running.")
+        for item in state["items"]:
+            print(core.summary_line(item))
+
+    elif cmd in ("pause", "resume", "restart", "remove"):
+        if len(args) < 2:
+            print(f"Usage: etimer {cmd} <id|label>")
+            return
+        item = resolve(state, args[1])
+        if cmd == "pause":
+            core.pause_item(state, item["id"])
+        elif cmd == "resume":
+            core.resume_item(state, item["id"])
+        elif cmd == "restart":
+            core.restart_item(state, item["id"])
+        elif cmd == "remove":
+            core.remove_item(state, item["id"])
+            print(f"Removed [{item['id']}] {item.get('label') or item['mode']}")
+            return
+        state = core.load_state()
+        print(core.summary_line(core.find(state, item["id"])))
+
+    elif cmd == "history":
+        if len(args) < 2:
+            print("Usage: etimer history <id|label>")
+            return
+        state = core.check_and_notify(state)
+        item = resolve(state, args[1])
+        print("\n".join(core.history_text(item)))
+
+    elif cmd == "sound":
+        sub = args[1] if len(args) > 1 else "status"
+        if sub in ("on", "off"):
+            core.set_sound_enabled(sub == "on")
+            print(f"Finish sound: {sub}")
+        elif sub == "test":
+            print(f"Sound file: {core.sound_path()}")
+            if not core.spawn_player(core.sound_path(), verbose=True):
+                print("Nothing could play it. Details: ~/.local/share/eternal-timer/sound.log")
+        elif sub == "style":
+            if len(args) < 3 or args[2] not in ("alarm", "chime"):
+                print("Usage: etimer sound style alarm|chime")
+                return
+            core.set_sound_style(args[2])
+            print(f"Finish sound style: {args[2]}")
+        elif sub == "file":
+            if len(args) < 3:
+                print("Usage: etimer sound file <path>|default")
+                return
+            if args[2] == "default":
+                core.set_sound_file(None)
+                print("Using the built-in chime.")
+            else:
+                from pathlib import Path
+                if not Path(args[2]).expanduser().is_file():
+                    print(f"No such file: {args[2]}")
+                    return
+                core.set_sound_file(args[2])
+                print(f"Using {args[2]}")
+        else:
+            on = "on" if core.sound_enabled() else "off"
+            print(f"Finish sound: {on}  ({core.sound_path()})")
+
+    elif cmd == "sync":
+        import eternal_timer_sync as sync
+        sub = args[1] if len(args) > 1 else "status"
+        if sub in ("setup", "join"):
+            if not sync.HAVE_CRYPTO:
+                print("Sync needs python-cryptography:  sudo pacman -S python-cryptography")
+                return
+            if sub == "setup":
+                code = sync.new_secret()
+                server = args[2] if len(args) > 2 else sync.DEFAULT_SERVER
+            else:
+                if len(args) < 3:
+                    print("Usage: etimer sync join <CODE> [server-url]")
+                    return
+                try:
+                    sync.parse_secret(args[2])
+                except ValueError as ex:
+                    print(ex)
+                    return
+                code = args[2].upper()
+                server = args[3] if len(args) > 3 else sync.DEFAULT_SERVER
+            sync.save_config(code, server)
+            if sub == "setup":
+                print("Pairing code (enter it on your other device, keep it private):\n")
+                print(f"    {code}\n")
+                print(f"Relay: {server}   (everything is end-to-end encrypted)")
+            try:
+                st = sync.sync_once(hello=(sub == "join"))
+                print(f"Synced: received {st['received']}, applied {st['applied']}, sent {st['sent']}")
+            except Exception as ex:
+                print(f"Saved, but the first sync failed ({ex}). It will retry automatically.")
+        elif sub == "now":
+            try:
+                st = sync.sync_once(hello=("--hello" in args))
+                print(f"Synced: received {st['received']}, applied {st['applied']}, sent {st['sent']}")
+            except Exception as ex:
+                print(f"Sync failed: {ex}")
+        elif sub == "off":
+            sync.disable()
+            print("Sync turned off. Your timers stay as they are.")
+        else:
+            cfg = sync.load_config()
+            if cfg is None:
+                print("Sync: not set up.  Try: etimer sync setup   (or: etimer sync join CODE)")
+            else:
+                print(f"Sync: on   relay {cfg['server']}   device {core.device_id()}")
+                print(f"Pairing code: {cfg['secret']}")
+
+    elif cmd == "check":
+        core.check_and_notify(state)
+        # stays quiet unless something actually finished (notify() handles that)
+        try:    # keep devices in step even when the GUI isn't running
+            import eternal_timer_sync as sync
+            if sync.load_config() is not None and sync.HAVE_CRYPTO:
+                sync.sync_once()
+        except Exception:
+            pass
+
+    elif cmd == "watch":
+        try:
+            while True:
+                state = core.check_and_notify(core.load_state())
+                lines = [core.summary_line(i) for i in state["items"]] or ["Nothing running."]
+                print("\033c", end="")  # clear terminal
+                print("Eternal Timer -- live view (Ctrl+C to exit)\n")
+                print("\n".join(lines))
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print()
+
+    else:
+        print(__doc__)
+
+
+if __name__ == "__main__":
+    main()

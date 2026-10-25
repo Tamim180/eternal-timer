@@ -1,0 +1,8 @@
+{
+ "code": "AAAQ-EAYE-AUDA-OCAJ-BIFQ-YDIO-B4IB-CEQT",
+ "topic": "etimer-187789555302943fe44e67f28271c6da7d65db53",
+ "key": "4a7828fd8a3b116e8d07f77168b681a2f539216269751d122e75483e56476005",
+ "nonce": "6465666768696a6b6c6d6e6f",
+ "cipher": "ZGVmZ2hpamtsbW5vnbOwvUxQ4B-ir7aGhNjPfKnWgQhkHa1Dq25HlW2f33FzeqtLiJFy",
+ "plain": "{\"hello\":\"world\",\"n\":1}"
+}

@@ -1,0 +1,1 @@
+First release: exact alarms, per-timer notifications with Pause/Resume, scroll-wheel time picker, history, themes, and optional end-to-end encrypted sync with the desktop app.

@@ -1,0 +1,2 @@
+#!/bin/sh
+exec python3 /app/bin/eternal_timer_gui.py "$@"

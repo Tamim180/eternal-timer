@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Eternal Timer
+Comment=Multi-timer and stopwatch that survives shutdowns
+Exec=eternal-timer
+Icon=com.eternaltimer.EternalTimer
+Terminal=false
+Categories=Utility;
+StartupWMClass=eternal-timer
