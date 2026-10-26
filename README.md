@@ -39,7 +39,7 @@ Developed and tested on Arch Linux (Wayland). Needs Python 3.10+ and PySide6; `p
 only for sync, and `libnotify` only for desktop notifications while the app is closed.
 
 ```bash
-git clone <repository-url>
+[git clone <repository-url>](https://github.com/Tamim180/eternal-timer.git)
 cd eternal-timer
 ./install.sh
 ```
