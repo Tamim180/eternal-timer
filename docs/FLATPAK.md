@@ -8,11 +8,11 @@
 ```bash
 sudo pacman -S --needed flatpak flatpak-builder          # or your distribution's equivalent
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-flatpak install flathub org.kde.Platform//6.8 org.kde.Sdk//6.8   # check the current runtime branch first
+flatpak install flathub org.kde.Platform//6.11 org.kde.Sdk//6.11   # check the current runtime branch first
 
 cd flatpak
 pip install --user flatpak-pip-generator
-flatpak-pip-generator --runtime="org.kde.Sdk//6.8" \
+flatpak-pip-generator --runtime="org.kde.Sdk//6.11" \
   --prefer-wheels=PySide6,PySide6-Essentials,PySide6-Addons,shiboken6,cryptography,cffi \
   --output pyside6-sources PySide6 cryptography
 flatpak-builder --user --install --force-clean build-dir com.eternaltimer.EternalTimer.yml

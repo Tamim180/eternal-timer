@@ -4,9 +4,9 @@ app-id: com.eternaltimer.EternalTimer
 # For a purely local/personal build the id above is fine as-is.
 
 runtime: org.kde.Platform
-runtime-version: '6.8'      # check the current stable branch first, see BUILD.md
+runtime-version: '6.11'
 sdk: org.kde.Sdk
-sdk-version: '6.8'
+sdk-version: '6.11'
 
 command: eternal-timer
 
