@@ -31,24 +31,29 @@ goes out the phone is still counting down and rings on its own.
 
 ![Themes](docs/img/themes.png)
 
-## Install
-
 ### Desktop (Linux)
 
-Developed and tested on Arch Linux (Wayland). Needs Python 3.10+ and PySide6; `python-cryptography` is needed
-only for sync, and `libnotify` only for desktop notifications while the app is closed.
+Developed and tested on Arch Linux (Wayland).
 
+**Arch Linux / AUR:**
+```bash
+yay -S eternal-timer
+```
+This handles dependencies, adds a launcher entry and icon, and sets up a background check (see below) — the
+cleanest option if you're on Arch or an Arch-based distro.
+
+**From source (any distro):**
 ```bash
 git clone https://github.com/Tamim180/eternal-timer.git
 cd eternal-timer
 ./install.sh
 ```
-
-On Arch the installer offers to `pacman -S` the missing packages. On other distributions install the same
-things with your package manager (or `pip install PySide6 cryptography`) and run `python3 eternal_timer_gui.py`.
-The installer puts the app and the `etimer` command in `~/.local/bin`, adds a launcher entry, and sets up a small
-background check (a systemd user timer) so a finished timer rings even when the window is closed.
-
+Needs Python 3.10+ and PySide6; `python-cryptography` is needed only for sync, and `libnotify` only for desktop
+notifications while the app is closed. On Arch the installer offers to `pacman -S` the missing packages. On
+other distributions install the same things with your package manager (or `pip install PySide6 cryptography`)
+and run `python3 eternal_timer_gui.py`. The installer puts the app and the `etimer` command in `~/.local/bin`,
+adds a launcher entry, and sets up a small background check (a systemd user timer) so a finished timer rings
+even when the window is closed.
 ### Android
 
 Requires Android 8.0 or newer. Get the APK from this repository's **Releases** page (`eternal-timer-<version>.apk`),
@@ -141,12 +146,23 @@ paste the code → *Join*. (On the command line: `etimer sync setup`, then `etim
 
 ## Uninstall (desktop)
 
+**If installed via AUR:**
+```bash
+sudo pacman -R eternal-timer
+```
+
+**If installed via `install.sh`:**
 ```bash
 systemctl --user disable --now eternal-timer-check.timer
 rm ~/.local/bin/{etimer,eternal_timer_core.py,eternal_timer_gui.py,eternal_timer_sync.py}
 rm ~/.config/autostart/eternal-timer-check.desktop ~/.config/systemd/user/eternal-timer-check.{service,timer}
 rm ~/.local/share/applications/eternal-timer.desktop ~/.local/share/icons/hicolor/128x128/apps/eternal-timer.png
-rm -rf ~/.local/share/eternal-timer      # your timers, history and settings (including the sync code)
+```
+
+**Either way**, your timers, history and settings (including the sync pairing code) live separately and aren't
+touched by the above:
+```bash
+rm -rf ~/.local/share/eternal-timer
 ```
 
 ## License
