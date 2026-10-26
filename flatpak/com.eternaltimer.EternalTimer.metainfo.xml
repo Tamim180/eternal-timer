@@ -5,6 +5,9 @@
   <summary>Timers and stopwatches that survive shutdowns and power cuts</summary>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
+  <developer id="io.github.Tamim180">
+    <name>Tamim Bhuiyan</name>
+  </developer>
   <description>
     <p>
       Run any number of timers and stopwatches at once. Every item stores an absolute
@@ -24,6 +27,38 @@
     </p>
   </description>
   <launchable type="desktop-id">com.eternaltimer.EternalTimer.desktop</launchable>
+  <url type="homepage">https://github.com/Tamim180/eternal-timer</url>
+  <url type="bugtracker">https://github.com/Tamim180/eternal-timer/issues</url>
+  <url type="vcs-browser">https://github.com/Tamim180/eternal-timer</url>
+  <categories>
+    <category>Utility</category>
+  </categories>
+  <screenshots>
+    <screenshot type="default">
+      <caption>The main window, with several timers and stopwatches running</caption>
+      <image>https://raw.githubusercontent.com/Tamim180/eternal-timer/v3.0.0/docs/img/main.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Running, paused and finished states</caption>
+      <image>https://raw.githubusercontent.com/Tamim180/eternal-timer/v3.0.0/docs/img/states.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>A stopwatch in progress</caption>
+      <image>https://raw.githubusercontent.com/Tamim180/eternal-timer/v3.0.0/docs/img/stopwatch.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The warning shown before starting a stopwatch</caption>
+      <image>https://raw.githubusercontent.com/Tamim180/eternal-timer/v3.0.0/docs/img/stopwatch-warning.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Setting up encrypted sync with the Android companion app</caption>
+      <image>https://raw.githubusercontent.com/Tamim180/eternal-timer/v3.0.0/docs/img/sync-dialog.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Available color themes</caption>
+      <image>https://raw.githubusercontent.com/Tamim180/eternal-timer/v3.0.0/docs/img/themes.png</image>
+    </screenshot>
+  </screenshots>
   <content_rating type="oars-1.1" />
   <releases>
     <release version="3.0.0" date="2026-10-25">
