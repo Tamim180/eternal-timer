@@ -30,3 +30,4 @@ android/keystore.properties
 .DS_Store
 .kotlin/
 .kotlin/
+*.sha256
